@@ -47,29 +47,24 @@ public class Romes extends Operations {
         return result;
     }
 
-    private String convertResultToRomes(int n, int ostatok){
-        ostatok = n%10;
-        if(ostatok != 0){
-            try{
-                return convertResultToRomes(n - ostatok,0)+ romes[ostatok-1];
+    public static String intToRoman(int num) {
+        StringBuilder sb = new StringBuilder();
+        int times = 0;
+        String[] romans = new String[] { "I", "IV", "V", "IX", "X", "XL", "L",
+                "XC", "C", "CD", "D", "CM", "M" };
+        int[] ints = new int[] { 1, 4, 5, 9, 10, 40, 50, 90, 100, 400, 500,
+                900, 1000 };
+        for (int i = ints.length - 1; i >= 0; i--) {
+            times = num / ints[i];
+            num %= ints[i];
+            while (times > 0) {
+                sb.append(romans[i]);
+                times--;
             }
-            catch (ArrayIndexOutOfBoundsException e){
-                sign = "-";
-                return  convertResultToRomes(n- ostatok,0)+romes[(ostatok+1)*-1];
-            }
         }
-        //Возможность вывести отрицательное римское число
-        if (n > 0) {
-            n = n - 10;
-            return convertResultToRomes(n,0) + "X";
-        } else if (n < 0) {
-            n = n + 10;
-            return convertResultToRomes(n,0) + "X";
-        }
-        else{
-            return sign;
-        }
+        return sb.toString();
     }
+
 
     public String getRomesOperand1(){
         return operand1;
@@ -108,26 +103,26 @@ public class Romes extends Operations {
     @Override
     public void plus() {
         resultInt = operand1Int + operand2Int;
-        resultString = convertResultToRomes(resultInt,resultInt);
+        resultString = intToRoman(resultInt);
     }
 
     @Override
     public void minus() {
         resultInt = operand1Int - operand2Int;
-        resultString = convertResultToRomes(resultInt,resultInt);
+        resultString = intToRoman(resultInt);
     }
 
     @Override
     public void multiply() {
         resultInt = operand1Int * operand2Int;
-        resultString = convertResultToRomes(resultInt,resultInt);
+        resultString = intToRoman(resultInt);
     }
 
     @Override
     public void divide() {
         try {
             resultInt = operand1Int / operand2Int;
-            resultString = convertResultToRomes(resultInt, resultInt);
+            resultString = intToRoman(resultInt);
         }catch (ArithmeticException e){
             System.out.println("Вероятно введены и арабские и римские цифры одновременно.");
             return;
